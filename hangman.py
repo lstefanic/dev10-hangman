@@ -1,3 +1,14 @@
+import random
+import math
+
+def choose_word():
+    # stuff
+    f = open("words.txt")
+    words = f.read().splitlines()
+    f.close()
+    index = math.floor(random.random() * len(words))
+    return words[index]
+
 def display_revealed_letters(SECRET_WORD,guessed_letters):
 
     revealed = "Secret word: "
@@ -17,7 +28,7 @@ def get_guess():
 
 def play():
 
-    SECRET_WORD = "cereal"
+    SECRET_WORD = choose_word()
     num_guesses = 7
     guessed_letters = set()
 
