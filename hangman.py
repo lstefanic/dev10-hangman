@@ -9,12 +9,12 @@ def choose_word():
     index = math.floor(random.random() * len(words))
     return words[index]
 
-def display_revealed_letters(SECRET_WORD,guessed_letters):
+def display_revealed_letters(secret_word,guessed_letters):
 
     revealed = "Secret word: "
-    for i in range(len(SECRET_WORD)):
-        if ( SECRET_WORD[i] in guessed_letters ):
-            revealed += SECRET_WORD[i]
+    for i in range(len(secret_word)):
+        if ( secret_word[i] in guessed_letters ):
+            revealed += secret_word[i]
         else:
             revealed += "_"
     print(revealed)
@@ -26,27 +26,39 @@ def get_guess():
         guess = input("Guess a letter or the entire word: ")
     return guess.lower()
 
-def play():
+def play_once(secret_word):
 
-    SECRET_WORD = choose_word()
     num_guesses = 7
     guessed_letters = set()
 
     while ( num_guesses > 0 ):
-        display_revealed_letters(SECRET_WORD,guessed_letters)
+        display_revealed_letters(secret_word,guessed_letters)
         guess = get_guess()
         if ( len(guess) > 1 ):
-            if ( guess == SECRET_WORD ):
+            if ( guess == secret_word ):
                 print("You win!")
-                return
+                return 1
             else:
                 num_guesses -= 1
         else:
-            if ( SECRET_WORD.find(guess) != -1 ):
+            if ( secret_word.find(guess) != -1 ):
                 guessed_letters.add(guess)
             else:
                 num_guesses -= 1
 
     print("You lose")
+    return 0
 
-play()
+games_played = 0
+wins = 0
+used_words = set()
+play_again = "y"
+while ( play_again == "y" ):
+    games_played += 1
+    secret_word = choose_word()
+    while (secret_word in used_words ):
+        secret_word = choose_word()
+    used_words.add(secret_word)
+    wins += play_once(secret_word)
+    print("%u wins, %u losses" % (wins, games_played - wins))
+    play_again = input("Play again? (y/n): ")
